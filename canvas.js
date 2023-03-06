@@ -42,7 +42,8 @@ function update() {
 function draw() {
     if (document.hidden)
         return;
-    drawCircle();
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawClock();
     updateMS();
     drawMS();
     if (seconds !== prevS) {
@@ -50,22 +51,54 @@ function draw() {
     }
     updateSParticles();
 }
-function drawCircle() {
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function drawClock() {
     ctx.beginPath();
     ctx.strokeStyle = 'white';
-    ctx.lineWidth = 5;
+    ctx.lineWidth = 7;
     ctx.arc(centerPoint.x, centerPoint.y, cloackWidth, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.closePath();
+    for (var i = 0; i < 60; i++) {
+        var rad = (i * 2 * Math.PI) / 60 - 0.5 * Math.PI;
+        var offset = {
+            x: cloackWidth * Math.cos(rad),
+            y: cloackWidth * Math.sin(rad),
+        };
+        var start = {
+            x: centerPoint.x + offset.x,
+            y: centerPoint.y + offset.y,
+        };
+        var dir = {
+            x: -Math.cos(rad),
+            y: -Math.sin(rad),
+        };
+        var markLength = void 0;
+        ctx.lineCap = 'round';
+        ctx.lineWidth = 4;
+        markLength = 20;
+        if (i % 5 === 0) {
+            ctx.lineWidth = 6;
+            markLength = 30;
+        }
+        if (i % 15 === 0) {
+            ctx.lineWidth = 7;
+            markLength = 32;
+        }
+        ctx.beginPath();
+        ctx.moveTo(start.x, start.y);
+        ctx.lineTo(start.x + dir.x * markLength, start.y + dir.y * markLength);
+        ctx.stroke();
+        ctx.closePath();
+    }
 }
 var msMainOffset = 30;
+var msCenter;
 function updateMS() {
     var offset = {
         x: cloackWidth * Math.cos(msRad),
         y: cloackWidth * Math.sin(msRad),
     };
-    var msCenter = {
+    msCenter = {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
@@ -109,16 +142,18 @@ var SecondParticle = /** @class */ (function () {
         this.y = spawnPoint.y;
         this.dirX = -Math.cos(sRad) + Math.random() * 0.3 - 0.15;
         this.dirY = -Math.sin(sRad) + Math.random() * 0.3 - 0.15;
-        this.velocity = Math.random() * 10;
+        this.velocity = Math.random() * 7;
         this.size = Math.random() * 10 + 2;
         this.opacity = 1;
+        this.lifespan = 0;
     }
     SecondParticle.prototype.update = function () {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
-        this.opacity -= 0.007;
-        this.size -= 0.01;
+        this.opacity -= 0.003;
+        this.size -= 0.005;
         this.velocity *= 1.006;
+        this.lifespan++;
         if (this.x + this.size < 0 ||
             this.x - this.size > canvas.width ||
             this.y + this.size < 0 ||
@@ -135,15 +170,19 @@ var SecondParticle = /** @class */ (function () {
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.closePath();
         ctx.lineWidth = 3;
+        ctx.fill();
         ctx.stroke();
     };
-    SecondParticle.prototype.repel = function (x, y) {
-        if (Math.abs(x - this.x) < 50 && Math.abs(y - this.y) < 50) {
-            var forceX = (x - this.x) / 100 / (this.size / 2);
-            var forceY = (y - this.y) / 100 / (this.size / 2);
-            this.dirX -= forceX;
-            this.dirY -= forceY;
-        }
+    SecondParticle.prototype.repel = function (x, y, power, range) {
+        if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range)
+            return;
+        if (this.lifespan < 40)
+            power *= 0.2;
+        var forceX = (x - this.x) / 100 / (this.size / 3);
+        var forceY = (y - this.y) / 100 / (this.size / 3);
+        this.dirX -= forceX * power;
+        this.dirY -= forceY * power;
+        this.velocity += Math.abs(forceX) + Math.abs(forceY);
     };
     return SecondParticle;
 }());
@@ -157,22 +196,23 @@ function createSParticles() {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 40; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
 function updateSParticles() {
+    applyForceToParticles(msCenter.x, msCenter.y, 1, 120);
     if (isMouseDown)
-        applyForceToParticles(mouse.x, mouse.y);
+        applyForceToParticles(mouse.x, mouse.y, 0.6, 80);
     for (var i = 0; i < particles.length; i++) {
         particles[i].update();
         if (particles[i])
             particles[i].draw();
     }
 }
-function applyForceToParticles(x, y) {
+function applyForceToParticles(x, y, power, range) {
     for (var i = 0; i < particles.length; i++) {
-        particles[i].repel(x, y);
+        particles[i].repel(x, y, power, range);
     }
 }
 var isMouseDown = false;
