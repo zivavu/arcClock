@@ -17,7 +17,7 @@ function setDimentions() {
 }
 
 const msArcsLimit = 30;
-const msLinesLimit = 20;
+const msLinesLimit = 10;
 let cloackWidth = canvas.height / 2.5;
 
 let hours: number, minutes: number, seconds: number, milliseconds: number;
@@ -48,13 +48,14 @@ function update() {
 }
 
 function draw() {
+    if (document.hidden) return;
     drawCircle();
     updateMS();
     drawMS();
     if (seconds !== prevS) {
         createSParticles();
     }
-    drawSParticles();
+    updateSParticles();
 }
 
 function drawCircle() {
@@ -123,10 +124,10 @@ class SecondParticle {
     constructor(spawnPoint: { x: number; y: number }) {
         this.x = spawnPoint.x;
         this.y = spawnPoint.y;
-        this.dirX = Math.random() * 4 - 2;
-        this.dirY = Math.random() * 4 - 2;
-        this.velocity = Math.random() * 5;
-        this.size = Math.random() * 5 + 2;
+        this.dirX = -Math.cos(sRad) + Math.random() * 0.3 - 0.15;
+        this.dirY = -Math.sin(sRad) + Math.random() * 0.3 - 0.15;
+        this.velocity = Math.random() * 10;
+        this.size = Math.random() * 10 + 2;
         this.opacity = 1;
     }
 
@@ -134,7 +135,8 @@ class SecondParticle {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
         this.opacity -= 0.007;
-        this.size += 0.05;
+        this.size -= 0.01;
+        this.velocity *= 1.006;
 
         if (
             this.x + this.size < 0 ||
@@ -157,6 +159,15 @@ class SecondParticle {
         ctx.lineWidth = 3;
         ctx.stroke();
     }
+
+    repel(x: number, y: number) {
+        if (Math.abs(x - this.x) < 50 && Math.abs(y - this.y) < 50) {
+            const forceX = (x - this.x) / 100 / (this.size / 2);
+            const forceY = (y - this.y) / 100 / (this.size / 2);
+            this.dirX -= forceX;
+            this.dirY -= forceY;
+        }
+    }
 }
 
 const particles: SecondParticle[] = [];
@@ -165,21 +176,43 @@ function createSParticles() {
         x: cloackWidth * Math.cos(sRad),
         y: cloackWidth * Math.sin(sRad),
     };
-    console.log('offset', seconds);
     const sCenter = {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
 
-function drawSParticles() {
+function updateSParticles() {
+    if (isMouseDown) applyForceToParticles(mouse.x, mouse.y);
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
-        particles[i].draw();
+        if (particles[i]) particles[i].draw();
     }
 }
+
+function applyForceToParticles(x: number, y: number) {
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].repel(x, y);
+    }
+}
+
+let isMouseDown = false;
+let mouse = {
+    x: 0,
+    y: 0,
+};
+canvas.onmouseup = () => {
+    isMouseDown = false;
+};
+canvas.onmousedown = () => {
+    isMouseDown = true;
+};
+canvas.onmousemove = (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+};
 
 setDimentions();

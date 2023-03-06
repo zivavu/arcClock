@@ -14,7 +14,7 @@ function setDimentions() {
     draw();
 }
 var msArcsLimit = 30;
-var msLinesLimit = 20;
+var msLinesLimit = 10;
 var cloackWidth = canvas.height / 2.5;
 var hours, minutes, seconds, milliseconds;
 var prevS;
@@ -40,13 +40,15 @@ function update() {
     draw();
 }
 function draw() {
+    if (document.hidden)
+        return;
     drawCircle();
     updateMS();
     drawMS();
     if (seconds !== prevS) {
         createSParticles();
     }
-    drawSParticles();
+    updateSParticles();
 }
 function drawCircle() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -105,17 +107,18 @@ var SecondParticle = /** @class */ (function () {
     function SecondParticle(spawnPoint) {
         this.x = spawnPoint.x;
         this.y = spawnPoint.y;
-        this.dirX = Math.random() * 4 - 2;
-        this.dirY = Math.random() * 4 - 2;
-        this.velocity = Math.random() * 5;
-        this.size = Math.random() * 5 + 2;
+        this.dirX = -Math.cos(sRad) + Math.random() * 0.3 - 0.15;
+        this.dirY = -Math.sin(sRad) + Math.random() * 0.3 - 0.15;
+        this.velocity = Math.random() * 10;
+        this.size = Math.random() * 10 + 2;
         this.opacity = 1;
     }
     SecondParticle.prototype.update = function () {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
         this.opacity -= 0.007;
-        this.size += 0.05;
+        this.size -= 0.01;
+        this.velocity *= 1.006;
         if (this.x + this.size < 0 ||
             this.x - this.size > canvas.width ||
             this.y + this.size < 0 ||
@@ -134,6 +137,14 @@ var SecondParticle = /** @class */ (function () {
         ctx.lineWidth = 3;
         ctx.stroke();
     };
+    SecondParticle.prototype.repel = function (x, y) {
+        if (Math.abs(x - this.x) < 50 && Math.abs(y - this.y) < 50) {
+            var forceX = (x - this.x) / 100 / (this.size / 2);
+            var forceY = (y - this.y) / 100 / (this.size / 2);
+            this.dirX -= forceX;
+            this.dirY -= forceY;
+        }
+    };
     return SecondParticle;
 }());
 var particles = [];
@@ -142,20 +153,42 @@ function createSParticles() {
         x: cloackWidth * Math.cos(sRad),
         y: cloackWidth * Math.sin(sRad),
     };
-    console.log('offset', seconds);
     var sCenter = {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 50; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
-function drawSParticles() {
+function updateSParticles() {
+    if (isMouseDown)
+        applyForceToParticles(mouse.x, mouse.y);
     for (var i = 0; i < particles.length; i++) {
         particles[i].update();
-        particles[i].draw();
+        if (particles[i])
+            particles[i].draw();
     }
 }
+function applyForceToParticles(x, y) {
+    for (var i = 0; i < particles.length; i++) {
+        particles[i].repel(x, y);
+    }
+}
+var isMouseDown = false;
+var mouse = {
+    x: 0,
+    y: 0,
+};
+canvas.onmouseup = function () {
+    isMouseDown = false;
+};
+canvas.onmousedown = function () {
+    isMouseDown = true;
+};
+canvas.onmousemove = function (e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+};
 setDimentions();
 //# sourceMappingURL=canvas.js.map
