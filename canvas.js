@@ -145,15 +145,17 @@ var SecondParticle = /** @class */ (function () {
         this.velocity = Math.random() * 7;
         this.size = Math.random() * 10 + 2;
         this.opacity = 1;
-        this.lifespan = 0;
+        this.lifeTime = 0;
+        this.isAttracted = false;
     }
     SecondParticle.prototype.update = function () {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
         this.opacity -= 0.003;
-        this.size -= 0.005;
-        this.velocity *= 1.006;
-        this.lifespan++;
+        this.size += 0.03;
+        this.lifeTime++;
+        if (!this.isAttracted)
+            this.velocity *= 1.006;
         if (this.x + this.size < 0 ||
             this.x - this.size > canvas.width ||
             this.y + this.size < 0 ||
@@ -176,13 +178,33 @@ var SecondParticle = /** @class */ (function () {
     SecondParticle.prototype.repel = function (x, y, power, range) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range)
             return;
-        if (this.lifespan < 40)
-            power *= 0.2;
+        if (this.lifeTime < 40)
+            power *= 0.1;
         var forceX = (x - this.x) / 100 / (this.size / 3);
         var forceY = (y - this.y) / 100 / (this.size / 3);
         this.dirX -= forceX * power;
         this.dirY -= forceY * power;
-        this.velocity += Math.abs(forceX) + Math.abs(forceY);
+        this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
+    };
+    SecondParticle.prototype.attract = function (x, y, power, range) {
+        if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) {
+            this.isAttracted = false;
+            return;
+        }
+        this.isAttracted = true;
+        var forceX = (x - this.x) / 50 / this.size;
+        var forceY = (y - this.y) / 50 / this.size;
+        this.dirX += forceX * power;
+        this.dirY += forceY * power;
+        if (this.dirX > 1)
+            this.dirX = 1;
+        if (this.dirY > 1)
+            this.dirY = 1;
+        if (this.dirY < -1)
+            this.dirY = -1;
+        if (this.dirX < -1)
+            this.dirX = -1;
+        this.opacity = 1;
     };
     return SecondParticle;
 }());
@@ -196,23 +218,28 @@ function createSParticles() {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
-    for (var i = 0; i < 40; i++) {
+    for (var i = 0; i < 30; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
 function updateSParticles() {
-    applyForceToParticles(msCenter.x, msCenter.y, 1, 120);
+    repelAllParticles(msCenter.x, msCenter.y, 1, 120);
     if (isMouseDown)
-        applyForceToParticles(mouse.x, mouse.y, 0.6, 80);
+        attractAllParticles(mouse.x, mouse.y, 1.5, 170);
     for (var i = 0; i < particles.length; i++) {
         particles[i].update();
         if (particles[i])
             particles[i].draw();
     }
 }
-function applyForceToParticles(x, y, power, range) {
+function repelAllParticles(x, y, power, range) {
     for (var i = 0; i < particles.length; i++) {
         particles[i].repel(x, y, power, range);
+    }
+}
+function attractAllParticles(x, y, power, range) {
+    for (var i = 0; i < particles.length; i++) {
+        particles[i].attract(x, y, power, range);
     }
 }
 var isMouseDown = false;
@@ -222,6 +249,8 @@ var mouse = {
 };
 canvas.onmouseup = function () {
     isMouseDown = false;
+    repelAllParticles(mouse.x, mouse.y, 10, 250);
+    console.log('mouse up');
 };
 canvas.onmousedown = function () {
     isMouseDown = true;

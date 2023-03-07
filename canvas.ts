@@ -66,7 +66,6 @@ function drawClock() {
     ctx.arc(centerPoint.x, centerPoint.y, cloackWidth, 0, 2 * Math.PI);
     ctx.stroke();
     ctx.closePath();
-
     for (let i = 0; i < 60; i++) {
         const rad = (i * 2 * Math.PI) / 60 - 0.5 * Math.PI;
         const offset = {
@@ -160,7 +159,9 @@ class SecondParticle {
     velocity: number;
     size: number;
     opacity: number;
-    lifespan: number;
+    lifeTime: number;
+    isAttracted: boolean;
+
     constructor(spawnPoint: { x: number; y: number }) {
         this.x = spawnPoint.x;
         this.y = spawnPoint.y;
@@ -169,16 +170,17 @@ class SecondParticle {
         this.velocity = Math.random() * 7;
         this.size = Math.random() * 10 + 2;
         this.opacity = 1;
-        this.lifespan = 0;
+        this.lifeTime = 0;
+        this.isAttracted = false;
     }
 
     update() {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
         this.opacity -= 0.003;
-        this.size -= 0.005;
-        this.velocity *= 1.006;
-        this.lifespan++;
+        this.size += 0.03;
+        this.lifeTime++;
+        if (!this.isAttracted) this.velocity *= 1.006;
 
         if (
             this.x + this.size < 0 ||
@@ -205,13 +207,32 @@ class SecondParticle {
 
     repel(x: number, y: number, power: number, range: number) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (this.lifespan < 40) power *= 0.2;
+        if (this.lifeTime < 40) power *= 0.1;
 
         const forceX = (x - this.x) / 100 / (this.size / 3);
         const forceY = (y - this.y) / 100 / (this.size / 3);
         this.dirX -= forceX * power;
         this.dirY -= forceY * power;
-        this.velocity += Math.abs(forceX) + Math.abs(forceY);
+        this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
+    }
+    attract(x: number, y: number, power: number, range: number) {
+        if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) {
+            this.isAttracted = false;
+            return;
+        }
+        this.isAttracted = true;
+
+        const forceX = (x - this.x) / 50 / this.size;
+        const forceY = (y - this.y) / 50 / this.size;
+
+        this.dirX += forceX * power;
+        this.dirY += forceY * power;
+        if (this.dirX > 1) this.dirX = 1;
+        if (this.dirY > 1) this.dirY = 1;
+        if (this.dirY < -1) this.dirY = -1;
+        if (this.dirX < -1) this.dirX = -1;
+
+        this.opacity = 1;
     }
 }
 
@@ -225,23 +246,29 @@ function createSParticles() {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 30; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
 
 function updateSParticles() {
-    applyForceToParticles(msCenter.x, msCenter.y, 1, 120);
-    if (isMouseDown) applyForceToParticles(mouse.x, mouse.y, 0.6, 80);
+    repelAllParticles(msCenter.x, msCenter.y, 1, 120);
+    if (isMouseDown) attractAllParticles(mouse.x, mouse.y, 1.5, 170);
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         if (particles[i]) particles[i].draw();
     }
 }
 
-function applyForceToParticles(x: number, y: number, power: number, range: number) {
+function repelAllParticles(x: number, y: number, power: number, range: number) {
     for (let i = 0; i < particles.length; i++) {
         particles[i].repel(x, y, power, range);
+    }
+}
+
+function attractAllParticles(x: number, y: number, power: number, range: number) {
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].attract(x, y, power, range);
     }
 }
 
@@ -252,6 +279,8 @@ let mouse = {
 };
 canvas.onmouseup = () => {
     isMouseDown = false;
+    repelAllParticles(mouse.x, mouse.y, 10, 250);
+    console.log('mouse up');
 };
 canvas.onmousedown = () => {
     isMouseDown = true;
