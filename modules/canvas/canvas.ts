@@ -1,4 +1,5 @@
 import { drawClock } from '../clock/clock.js';
+import { drawMin, updateMin } from '../minHand/minHand.js';
 import { mouse, mouseHistory } from '../mouseManager/mouseManager.js';
 import { drawMS, updateMS } from '../msHand/msHand.js';
 import { createSParticles, updateSParticles } from '../secHandParticles/particleManager.js';
@@ -49,6 +50,8 @@ function draw() {
         createSParticles();
     }
     updateSParticles();
+    updateMin();
+    drawMin();
     // drawMouseHistory();
 }
 

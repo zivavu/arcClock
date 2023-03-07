@@ -20,7 +20,15 @@
         "modules/mouseManager/mouseManager.js.map": true,
         "modules/mouseManager/mouseManager.js": true,
         "modules/mHand/mHand.js.map": true,
-        "modules/mHand/mHand.js": true
+        "modules/mHand/mHand.js": true,
+        "modules/secHandParticles/SecondParticle.js": true,
+        "modules/secHandParticles/SecondParticle.js.map": true,
+        "modules/secHandParticles/particleManager.js.map": true,
+        "modules/secHandParticles/particleManager.js": true,
+        "modules/clock/clock.js": true,
+        "modules/minHand/minHand.js": true,
+        "modules/minHand/minHand.js.map": true,
+        "modules/timeManager/timeManager.js": true
     },
     "hide-files.files": [
         "modules/canvas/canvas.js.map",
@@ -36,6 +44,14 @@
         "modules/mouseManager/mouseManager.js.map",
         "modules/mouseManager/mouseManager.js",
         "modules/mHand/mHand.js.map",
-        "modules/mHand/mHand.js"
+        "modules/mHand/mHand.js",
+        "modules/secHandParticles/SecondParticle.js",
+        "modules/secHandParticles/SecondParticle.js.map",
+        "modules/secHandParticles/particleManager.js.map",
+        "modules/secHandParticles/particleManager.js",
+        "modules/clock/clock.js",
+        "modules/minHand/minHand.js",
+        "modules/minHand/minHand.js.map",
+        "modules/timeManager/timeManager.js"
     ]
 }

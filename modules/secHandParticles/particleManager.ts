@@ -10,29 +10,29 @@ export function createSParticles() {
         x: cloackWidth * Math.cos(secRad),
         y: cloackWidth * Math.sin(secRad),
     };
-    const sCenter = {
+    const secCenter = {
         x: centerScreenPoint.x + offset.x,
         y: centerScreenPoint.y + offset.y,
     };
 
     if (particles.length > 250) {
         for (let i = 0; i < 4; i++) {
-            particles.push(new SecondParticle(sCenter));
+            particles.push(new SecondParticle(secCenter.x, secCenter.y));
         }
         return;
     }
     for (let i = 0; i < 30; i++) {
-        particles.push(new SecondParticle(sCenter));
+        particles.push(new SecondParticle(secCenter.x, secCenter.y));
     }
 }
 
 export function updateSParticles() {
     repelAllParticles(msCenter.x, msCenter.y, 1, 120);
     if (isMouseDown) {
-        [...mouseHistory, mouse].forEach((mousePos, i) => {
-            attractAllParticles(mousePos.x, mousePos.y, 0.6 + i * 0.3, 50 + i * (70 / mouseHistoryLimit));
+        [...mouseHistory, mouse].forEach((pos, i) => {
+            attractAllParticles(pos.x, pos.y, 0.6 + i * 0.3, 60 + i * (60 / mouseHistoryLimit));
             if (i === 0) {
-                attractAllParticles(mousePos.x, mousePos.y, 0.3, 140);
+                attractAllParticles(pos.x, pos.y, 0.3, 140);
             }
         });
     }

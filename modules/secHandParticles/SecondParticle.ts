@@ -13,9 +13,9 @@ export class SecondParticle {
     lifeTime: number;
     isAttracted: boolean;
 
-    constructor(spawnPoint: { x: number; y: number }) {
-        this.x = spawnPoint.x;
-        this.y = spawnPoint.y;
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
         this.dirX = -Math.cos(secRad) + Math.random() * 0.3 - 0.15;
         this.dirY = -Math.sin(secRad) + Math.random() * 0.3 - 0.15;
         this.velocity = Math.random() * 7;
@@ -26,6 +26,11 @@ export class SecondParticle {
     }
 
     update() {
+        if (this.dirX > 1) this.dirX = 1;
+        if (this.dirY > 1) this.dirY = 1;
+        if (this.dirY < -1) this.dirY = -1;
+        if (this.dirX < -1) this.dirX = -1;
+
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
         this.opacity -= 0.002;
@@ -77,10 +82,6 @@ export class SecondParticle {
 
         this.dirX += forceX * power;
         this.dirY += forceY * power;
-        if (this.dirX > 1) this.dirX = 1;
-        if (this.dirY > 1) this.dirY = 1;
-        if (this.dirY < -1) this.dirY = -1;
-        if (this.dirX < -1) this.dirX = -1;
 
         this.opacity = 1;
     }

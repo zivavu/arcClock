@@ -24,7 +24,7 @@ export function pushNewMousePoint() {
 canvas.onmouseup = () => {
     resetSParticlesIsAttracted();
     isMouseDown = false;
-    repelAllParticles(mouse.x, mouse.y, 5, 250);
+    repelAllParticles(mouse.x, mouse.y, 4, 250);
     mouseHistory = [];
     clearInterval(mouseHistoryInterval);
 };
