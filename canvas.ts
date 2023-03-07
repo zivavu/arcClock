@@ -57,6 +57,17 @@ function draw() {
         createSParticles();
     }
     updateSParticles();
+    // drawMouseHistory();
+}
+
+function drawMouseHistory() {
+    mouseHistory.forEach((point) => {
+        ctx.beginPath();
+        ctx.fillStyle = `yellow`;
+        ctx.fillRect(point.x, point.y, 20, 20);
+        ctx.closePath();
+        ctx.fillStyle = `black`;
+    });
 }
 
 function drawClock() {
@@ -207,23 +218,22 @@ class SecondParticle {
 
     repel(x: number, y: number, power: number, range: number) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (this.lifeTime < 40) power *= 0.1;
+        if (this.lifeTime < 60) power *= 0.1;
 
         const forceX = (x - this.x) / 100 / (this.size / 3);
         const forceY = (y - this.y) / 100 / (this.size / 3);
         this.dirX -= forceX * power;
         this.dirY -= forceY * power;
-        this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
+        if (!this.isAttracted) this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
     }
     attract(x: number, y: number, power: number, range: number) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) {
-            this.isAttracted = false;
             return;
         }
         this.isAttracted = true;
 
-        const forceX = (x - this.x) / 50 / this.size;
-        const forceY = (y - this.y) / 50 / this.size;
+        const forceX = (x - this.x) / 100 / (this.size / 5);
+        const forceY = (y - this.y) / 100 / (this.size / 5);
 
         this.dirX += forceX * power;
         this.dirY += forceY * power;
@@ -246,6 +256,13 @@ function createSParticles() {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
+
+    if (particles.length > 250) {
+        for (let i = 0; i < 4; i++) {
+            particles.push(new SecondParticle(sCenter));
+        }
+        return;
+    }
     for (let i = 0; i < 30; i++) {
         particles.push(new SecondParticle(sCenter));
     }
@@ -253,7 +270,14 @@ function createSParticles() {
 
 function updateSParticles() {
     repelAllParticles(msCenter.x, msCenter.y, 1, 120);
-    if (isMouseDown) attractAllParticles(mouse.x, mouse.y, 1.5, 170);
+    if (isMouseDown) {
+        [...mouseHistory, mouse].forEach((mousePos, i) => {
+            attractAllParticles(mousePos.x, mousePos.y, 1 + i * 0.1, 60 + i * (50 / mouseHistoryLimit));
+            if (i === 0) {
+                attractAllParticles(mousePos.x, mousePos.y, 0.3, 130);
+            }
+        });
+    }
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
         if (particles[i]) particles[i].draw();
@@ -271,19 +295,42 @@ function attractAllParticles(x: number, y: number, power: number, range: number)
         particles[i].attract(x, y, power, range);
     }
 }
+function resetSParticlesIsAttracted() {
+    for (let i = 0; i < particles.length; i++) {
+        particles[i].isAttracted = false;
+    }
+}
 
 let isMouseDown = false;
 let mouse = {
     x: 0,
     y: 0,
 };
+let mouseHistory: { x: number; y: number }[] = [];
+const mouseHistoryLimit = 13;
+let mouseHistoryInterval: ReturnType<typeof setInterval>;
+
+function pushNewMousePoint() {
+    mouseHistoryInterval = setInterval(() => {
+        if (mouseHistory.some((pos) => Math.abs(pos.x - mouse.x) < 40 && Math.abs(pos.y - mouse.y) < 40)) {
+            return;
+        }
+        if (mouseHistory.length >= mouseHistoryLimit) {
+            mouseHistory.shift();
+        }
+        mouseHistory.push({ ...mouse });
+    }, 30);
+}
 canvas.onmouseup = () => {
+    resetSParticlesIsAttracted();
     isMouseDown = false;
     repelAllParticles(mouse.x, mouse.y, 10, 250);
-    console.log('mouse up');
+    mouseHistory = [];
+    clearInterval(mouseHistoryInterval);
 };
 canvas.onmousedown = () => {
     isMouseDown = true;
+    pushNewMousePoint();
 };
 canvas.onmousemove = (e) => {
     mouse.x = e.clientX;

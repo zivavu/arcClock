@@ -1,3 +1,23 @@
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 window.addEventListener('resize', setDimentions);
@@ -50,6 +70,16 @@ function draw() {
         createSParticles();
     }
     updateSParticles();
+    // drawMouseHistory();
+}
+function drawMouseHistory() {
+    mouseHistory.forEach(function (point) {
+        ctx.beginPath();
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(point.x, point.y, 20, 20);
+        ctx.closePath();
+        ctx.fillStyle = "black";
+    });
 }
 function drawClock() {
     ctx.beginPath();
@@ -178,22 +208,22 @@ var SecondParticle = /** @class */ (function () {
     SecondParticle.prototype.repel = function (x, y, power, range) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range)
             return;
-        if (this.lifeTime < 40)
+        if (this.lifeTime < 60)
             power *= 0.1;
         var forceX = (x - this.x) / 100 / (this.size / 3);
         var forceY = (y - this.y) / 100 / (this.size / 3);
         this.dirX -= forceX * power;
         this.dirY -= forceY * power;
-        this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
+        if (!this.isAttracted)
+            this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
     };
     SecondParticle.prototype.attract = function (x, y, power, range) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) {
-            this.isAttracted = false;
             return;
         }
         this.isAttracted = true;
-        var forceX = (x - this.x) / 50 / this.size;
-        var forceY = (y - this.y) / 50 / this.size;
+        var forceX = (x - this.x) / 100 / (this.size / 5);
+        var forceY = (y - this.y) / 100 / (this.size / 5);
         this.dirX += forceX * power;
         this.dirY += forceY * power;
         if (this.dirX > 1)
@@ -218,14 +248,26 @@ function createSParticles() {
         x: centerPoint.x + offset.x,
         y: centerPoint.y + offset.y,
     };
+    if (particles.length > 250) {
+        for (var i = 0; i < 4; i++) {
+            particles.push(new SecondParticle(sCenter));
+        }
+        return;
+    }
     for (var i = 0; i < 30; i++) {
         particles.push(new SecondParticle(sCenter));
     }
 }
 function updateSParticles() {
     repelAllParticles(msCenter.x, msCenter.y, 1, 120);
-    if (isMouseDown)
-        attractAllParticles(mouse.x, mouse.y, 1.5, 170);
+    if (isMouseDown) {
+        __spreadArray(__spreadArray([], mouseHistory, true), [mouse], false).forEach(function (mousePos, i) {
+            attractAllParticles(mousePos.x, mousePos.y, 1 + i * 0.1, 60 + i * (50 / mouseHistoryLimit));
+            if (i === 0) {
+                attractAllParticles(mousePos.x, mousePos.y, 0.3, 130);
+            }
+        });
+    }
     for (var i = 0; i < particles.length; i++) {
         particles[i].update();
         if (particles[i])
@@ -242,18 +284,40 @@ function attractAllParticles(x, y, power, range) {
         particles[i].attract(x, y, power, range);
     }
 }
+function resetSParticlesIsAttracted() {
+    for (var i = 0; i < particles.length; i++) {
+        particles[i].isAttracted = false;
+    }
+}
 var isMouseDown = false;
 var mouse = {
     x: 0,
     y: 0,
 };
+var mouseHistory = [];
+var mouseHistoryLimit = 13;
+var mouseHistoryInterval;
+function pushNewMousePoint() {
+    mouseHistoryInterval = setInterval(function () {
+        if (mouseHistory.some(function (pos) { return Math.abs(pos.x - mouse.x) < 40 && Math.abs(pos.y - mouse.y) < 40; })) {
+            return;
+        }
+        if (mouseHistory.length >= mouseHistoryLimit) {
+            mouseHistory.shift();
+        }
+        mouseHistory.push(__assign({}, mouse));
+    }, 30);
+}
 canvas.onmouseup = function () {
+    resetSParticlesIsAttracted();
     isMouseDown = false;
     repelAllParticles(mouse.x, mouse.y, 10, 250);
-    console.log('mouse up');
+    mouseHistory = [];
+    clearInterval(mouseHistoryInterval);
 };
 canvas.onmousedown = function () {
     isMouseDown = true;
+    pushNewMousePoint();
 };
 canvas.onmousemove = function (e) {
     mouse.x = e.clientX;
