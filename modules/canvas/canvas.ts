@@ -1,7 +1,7 @@
 import { drawClock } from '../clock/clock.js';
-import { mouseHistory } from '../mouseManager/mouseManager.js';
+import { mouse, mouseHistory } from '../mouseManager/mouseManager.js';
 import { drawMS, updateMS } from '../msHand/msHand.js';
-import { createSParticles, updateSParticles } from '../sHandParticles/particleManager.js';
+import { createSParticles, updateSParticles } from '../secHandParticles/particleManager.js';
 import { prevS, seconds, updateDate } from '../timeManager/timeManager.js';
 
 export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -11,6 +11,8 @@ export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 export const msArcsLimit = 30;
 export const msLinesLimit = 10;
 export const msMainOffset = 30;
+
+export const mouseHistoryLimit = 17;
 
 export let cloackWidth: number;
 export let centerScreenPoint: { x: number; y: number };
@@ -51,7 +53,7 @@ function draw() {
 }
 
 function drawMouseHistory() {
-    mouseHistory.forEach((point) => {
+    [...mouseHistory, mouse].forEach((point) => {
         ctx.beginPath();
         ctx.fillStyle = `yellow`;
         ctx.fillRect(point.x, point.y, 20, 20);

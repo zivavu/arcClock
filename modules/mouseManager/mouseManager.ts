@@ -1,26 +1,15 @@
-import { repelAllParticles, resetSParticlesIsAttracted } from '../sHandParticles/particleManager.js';
+import { mouseHistoryLimit } from '../canvas/canvas.js';
+import { repelAllParticles, resetSParticlesIsAttracted } from '../secHandParticles/particleManager.js';
 
-export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-function drawMouseHistory() {
-    mouseHistory.forEach((point) => {
-        ctx.beginPath();
-        ctx.fillStyle = `yellow`;
-        ctx.fillRect(point.x, point.y, 20, 20);
-        ctx.closePath();
-        ctx.fillStyle = `black`;
-    });
-}
+const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
 export let isMouseDown = false;
 export let mouse = {
     x: 0,
     y: 0,
 };
-export let mouseHistory = [];
-export const mouseHistoryLimit = 13;
-let mouseHistoryInterval;
+export let mouseHistory: { x: number; y: number }[] = [];
+let mouseHistoryInterval: ReturnType<typeof setInterval>;
 export function pushNewMousePoint() {
     mouseHistoryInterval = setInterval(() => {
         if (mouseHistory.some((pos) => Math.abs(pos.x - mouse.x) < 40 && Math.abs(pos.y - mouse.y) < 40)) {
@@ -30,7 +19,7 @@ export function pushNewMousePoint() {
             mouseHistory.shift();
         }
         mouseHistory.push(Object.assign({}, mouse));
-    }, 30);
+    }, 40);
 }
 canvas.onmouseup = () => {
     resetSParticlesIsAttracted();

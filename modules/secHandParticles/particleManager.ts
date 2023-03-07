@@ -1,14 +1,14 @@
-import { centerScreenPoint, cloackWidth } from '../canvas/canvas.js';
-import { isMouseDown, mouse, mouseHistory, mouseHistoryLimit } from '../mouseManager/mouseManager.js';
+import { centerScreenPoint, cloackWidth, mouseHistoryLimit } from '../canvas/canvas.js';
+import { isMouseDown, mouse, mouseHistory } from '../mouseManager/mouseManager.js';
 import { msCenter } from '../msHand/msHand.js';
-import { sRad } from '../timeManager/timeManager.js';
+import { secRad } from '../timeManager/timeManager.js';
 import { SecondParticle } from './SecondParticle.js';
 
 export const particles: SecondParticle[] = [];
 export function createSParticles() {
     const offset = {
-        x: cloackWidth * Math.cos(sRad),
-        y: cloackWidth * Math.sin(sRad),
+        x: cloackWidth * Math.cos(secRad),
+        y: cloackWidth * Math.sin(secRad),
     };
     const sCenter = {
         x: centerScreenPoint.x + offset.x,
@@ -30,9 +30,9 @@ export function updateSParticles() {
     repelAllParticles(msCenter.x, msCenter.y, 1, 120);
     if (isMouseDown) {
         [...mouseHistory, mouse].forEach((mousePos, i) => {
-            attractAllParticles(mousePos.x, mousePos.y, 1 + i * 0.1, 60 + i * (50 / mouseHistoryLimit));
+            attractAllParticles(mousePos.x, mousePos.y, 0.6 + i * 0.3, 50 + i * (70 / mouseHistoryLimit));
             if (i === 0) {
-                attractAllParticles(mousePos.x, mousePos.y, 0.4, 140);
+                attractAllParticles(mousePos.x, mousePos.y, 0.3, 140);
             }
         });
     }

@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../canvas/canvas.js';
-import { sRad } from '../timeManager/timeManager.js';
+import { secRad } from '../timeManager/timeManager.js';
 import { particles } from './particleManager.js';
 
 export class SecondParticle {
@@ -16,8 +16,8 @@ export class SecondParticle {
     constructor(spawnPoint: { x: number; y: number }) {
         this.x = spawnPoint.x;
         this.y = spawnPoint.y;
-        this.dirX = -Math.cos(sRad) + Math.random() * 0.3 - 0.15;
-        this.dirY = -Math.sin(sRad) + Math.random() * 0.3 - 0.15;
+        this.dirX = -Math.cos(secRad) + Math.random() * 0.3 - 0.15;
+        this.dirY = -Math.sin(secRad) + Math.random() * 0.3 - 0.15;
         this.velocity = Math.random() * 7;
         this.size = Math.random() * 10 + 2;
         this.opacity = 1;
@@ -28,7 +28,7 @@ export class SecondParticle {
     update() {
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
-        this.opacity -= 0.003;
+        this.opacity -= 0.002;
         this.size += 0.03;
         this.lifeTime++;
         if (!this.isAttracted) this.velocity *= 1.006;
@@ -58,10 +58,10 @@ export class SecondParticle {
 
     repel(x: number, y: number, power: number, range: number) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (this.lifeTime < 60) power *= 0.1;
+        if (this.lifeTime < 60 && !this.isAttracted) power *= 0.1;
 
-        const forceX = (x - this.x) / 100 / (this.size / 3);
-        const forceY = (y - this.y) / 100 / (this.size / 3);
+        const forceX = (x - this.x) / 100 / Math.min(this.size / 5, 6);
+        const forceY = (y - this.y) / 100 / Math.min(this.size / 5, 6);
         this.dirX -= forceX * power;
         this.dirY -= forceY * power;
         if (!this.isAttracted) this.velocity += (Math.abs(forceX) + Math.abs(forceY)) * (power * 5);
@@ -72,8 +72,8 @@ export class SecondParticle {
         }
         this.isAttracted = true;
 
-        const forceX = (x - this.x) / 100 / (this.size / 5);
-        const forceY = (y - this.y) / 100 / (this.size / 5);
+        const forceX = (x - this.x) / 80 / Math.min(this.size / 8, 4);
+        const forceY = (y - this.y) / 80 / Math.min(this.size / 8, 4);
 
         this.dirX += forceX * power;
         this.dirY += forceY * power;

@@ -12,15 +12,15 @@
         "modules/canvas/canvas.js": true,
         "modules/msHand/msHand.js.map": true,
         "modules/msHand/msHand.js": true,
-        "modules/timeManager/timeManager.js": true,
         "modules/clock/clock.js.map": true,
-        "modules/clock/clock.js": true,
         "modules/sHandParticles/particleManager.js": true,
         "modules/sHandParticles/particleManager.js.map": true,
         "modules/sHandParticles/SecondParticle.js": true,
         "modules/sHandParticles/SecondParticle.js.map": true,
         "modules/mouseManager/mouseManager.js.map": true,
-        "modules/mouseManager/mouseManager.js": true
+        "modules/mouseManager/mouseManager.js": true,
+        "modules/mHand/mHand.js.map": true,
+        "modules/mHand/mHand.js": true
     },
     "hide-files.files": [
         "modules/canvas/canvas.js.map",
@@ -28,14 +28,14 @@
         "modules/canvas/canvas.js",
         "modules/msHand/msHand.js.map",
         "modules/msHand/msHand.js",
-        "modules/timeManager/timeManager.js",
         "modules/clock/clock.js.map",
-        "modules/clock/clock.js",
         "modules/sHandParticles/particleManager.js",
         "modules/sHandParticles/particleManager.js.map",
         "modules/sHandParticles/SecondParticle.js",
         "modules/sHandParticles/SecondParticle.js.map",
         "modules/mouseManager/mouseManager.js.map",
-        "modules/mouseManager/mouseManager.js"
+        "modules/mouseManager/mouseManager.js",
+        "modules/mHand/mHand.js.map",
+        "modules/mHand/mHand.js"
     ]
 }
