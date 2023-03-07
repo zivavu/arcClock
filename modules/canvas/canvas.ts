@@ -13,6 +13,11 @@ export const msArcsLimit = 30;
 export const msLinesLimit = 10;
 export const msMainOffset = 30;
 
+export const minLinesLimit = 15;
+export const minMainOffset = 15;
+export const minDirMultiplier = 18;
+export const minLineStartWidth = 6;
+
 export const mouseHistoryLimit = 17;
 
 export let cloackWidth: number;

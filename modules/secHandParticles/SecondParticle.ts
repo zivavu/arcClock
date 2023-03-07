@@ -63,7 +63,7 @@ export class SecondParticle {
 
     repel(x: number, y: number, power: number, range: number) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (this.lifeTime < 60 && !this.isAttracted) power *= 0.1;
+        if (this.lifeTime < 40 && !this.isAttracted) power *= 0.1;
 
         const forceX = (x - this.x) / 100 / Math.min(this.size / 5, 6);
         const forceY = (y - this.y) / 100 / Math.min(this.size / 5, 6);
