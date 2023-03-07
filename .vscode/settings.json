@@ -1,3 +1,41 @@
 {
-    "liveServer.settings.multiRootWorkspaceName": "arcClock"
+    "liveServer.settings.multiRootWorkspaceName": "arcClock",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "modules/canvas/canvas.js.map": true,
+        "modules/timeManager/timeManager.js.map": true,
+        "modules/canvas/canvas.js": true,
+        "modules/msHand/msHand.js.map": true,
+        "modules/msHand/msHand.js": true,
+        "modules/timeManager/timeManager.js": true,
+        "modules/clock/clock.js.map": true,
+        "modules/clock/clock.js": true,
+        "modules/sHandParticles/particleManager.js": true,
+        "modules/sHandParticles/particleManager.js.map": true,
+        "modules/sHandParticles/SecondParticle.js": true,
+        "modules/sHandParticles/SecondParticle.js.map": true,
+        "modules/mouseManager/mouseManager.js.map": true,
+        "modules/mouseManager/mouseManager.js": true
+    },
+    "hide-files.files": [
+        "modules/canvas/canvas.js.map",
+        "modules/timeManager/timeManager.js.map",
+        "modules/canvas/canvas.js",
+        "modules/msHand/msHand.js.map",
+        "modules/msHand/msHand.js",
+        "modules/timeManager/timeManager.js",
+        "modules/clock/clock.js.map",
+        "modules/clock/clock.js",
+        "modules/sHandParticles/particleManager.js",
+        "modules/sHandParticles/particleManager.js.map",
+        "modules/sHandParticles/SecondParticle.js",
+        "modules/sHandParticles/SecondParticle.js.map",
+        "modules/mouseManager/mouseManager.js.map",
+        "modules/mouseManager/mouseManager.js"
+    ]
 }
