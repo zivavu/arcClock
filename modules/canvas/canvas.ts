@@ -2,7 +2,7 @@ import { drawClock } from '../clock/clock.js';
 import { drawMin, updateMin } from '../minHand/minHand.js';
 import { mouse, mouseHistory } from '../mouseManager/mouseManager.js';
 import { drawMS, updateMS } from '../msHand/msHand.js';
-import { createSParticles, updateSParticles } from '../secHandParticles/particleManager.js';
+import { createSParticles, drawSParticles, updateSParticles } from '../secHandParticles/particleManager.js';
 import { prevS, seconds, updateDate } from '../timeManager/timeManager.js';
 
 export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -13,10 +13,12 @@ export const msArcsLimit = 30;
 export const msLinesLimit = 10;
 export const msMainOffset = 30;
 
-export const minLinesLimit = 15;
-export const minMainOffset = 15;
+export const minArcsLimit = 5;
+export const minSegmentsLimit = 15;
+export const minMainOffset = 20;
 export const minDirMultiplier = 18;
-export const minLineStartWidth = 6;
+export const minLineWidthDevider = 4;
+export const minRepelPower = 0.5;
 
 export const mouseHistoryLimit = 17;
 
@@ -29,7 +31,7 @@ window.addEventListener('resize', setDimentions);
 function setDimentions() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    cloackWidth = canvas.height / 2.3;
+    cloackWidth = Math.min(canvas.height / 2.3, canvas.width / 2.3);
     centerScreenPoint = {
         x: canvas.width / 2,
         y: canvas.height / 2,
@@ -41,21 +43,22 @@ function setDimentions() {
 const frameInterval = setInterval(update, framerate);
 
 function update() {
-    updateDate();
-    draw();
-}
-
-function draw() {
     if (document.hidden) return;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawClock();
+    updateDate();
     updateMS();
-    drawMS();
     if (seconds !== prevS) {
         createSParticles();
     }
     updateSParticles();
     updateMin();
+    draw();
+}
+
+function draw() {
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawClock();
+    drawMS();
+    drawSParticles();
     drawMin();
     // drawMouseHistory();
 }

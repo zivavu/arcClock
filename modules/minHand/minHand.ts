@@ -2,10 +2,12 @@ import {
     centerScreenPoint,
     cloackWidth,
     ctx,
+    minArcsLimit,
     minDirMultiplier,
-    minLinesLimit,
-    minLineStartWidth,
+    minLineWidthDevider,
     minMainOffset,
+    minRepelPower,
+    minSegmentsLimit,
 } from '../canvas/canvas.js';
 import { repelAllParticles } from '../secHandParticles/particleManager.js';
 import { minRad } from '../timeManager/timeManager.js';
@@ -31,11 +33,11 @@ export function updateMin() {
         y: Math.sin(minRad),
     };
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < minArcsLimit; i++) {
         arcs.push([]);
         const currentBranch = arcs[i];
         currentBranch.push({ x: minCenter.x, y: minCenter.y });
-        for (let j = 0; j < minLinesLimit; j++) {
+        for (let j = 0; j < minSegmentsLimit; j++) {
             const { x: prevX, y: prevY } = currentBranch[j];
 
             const randomXOffset = Math.random() * minMainOffset * 2 - minMainOffset;
@@ -47,20 +49,31 @@ export function updateMin() {
             const newY = prevY + randomYOffset + randomYDirection;
             currentBranch.push({ x: newX, y: newY });
         }
+        const { x: lastSegmentX, y: lastSegmentY } = currentBranch[currentBranch.length - 1];
+        repelAllParticles(lastSegmentX, lastSegmentY, minRepelPower, 40, true);
     }
 }
+
 export function drawMin() {
-    for (let j = 0; j < arcs.length; j++) {
+    if (!arcs[0]) return;
+    for (let j = 0; j < minArcsLimit; j++) {
+        ctx.beginPath();
         const currentBranch = arcs[j];
         for (let k = 0; k < currentBranch.length - 1; k++) {
-            ctx.beginPath();
-            ctx.lineWidth = (minLinesLimit - k) / 2;
+            ctx.lineWidth = (minSegmentsLimit - k) / minLineWidthDevider;
             ctx.moveTo(currentBranch[k].x, currentBranch[k].y);
             ctx.lineTo(currentBranch[k + 1].x, currentBranch[k + 1].y);
             ctx.stroke();
-            ctx.closePath();
         }
         const { x: lastSegmentX, y: lastSegmentY } = currentBranch[currentBranch.length - 1];
-        repelAllParticles(lastSegmentX, lastSegmentY, 0.7, 30);
+        ctx.closePath();
+        ctx.fillStyle = `white`;
+        ctx.beginPath();
+        ctx.arc(lastSegmentX, lastSegmentY, 2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = `black`;
+        ctx.closePath();
     }
 }

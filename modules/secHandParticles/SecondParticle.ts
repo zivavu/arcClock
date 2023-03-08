@@ -1,5 +1,5 @@
 import { canvas, ctx } from '../canvas/canvas.js';
-import { secRad } from '../timeManager/timeManager.js';
+import { seconds, secRad } from '../timeManager/timeManager.js';
 import { particles } from './particleManager.js';
 
 export class SecondParticle {
@@ -10,7 +10,7 @@ export class SecondParticle {
     velocity: number;
     size: number;
     opacity: number;
-    lifeTime: number;
+    spawnProtection: number;
     isAttracted: boolean;
 
     constructor(x: number, y: number) {
@@ -21,8 +21,10 @@ export class SecondParticle {
         this.velocity = Math.random() * 7;
         this.size = Math.random() * 10 + 2;
         this.opacity = 1;
-        this.lifeTime = 0;
+        const extendSpawnProtection = (seconds >= 45 && seconds <= 60) || (seconds >= 0 && seconds <= 10);
+        this.spawnProtection = extendSpawnProtection ? 90 : 50;
         this.isAttracted = false;
+        console.log(this.spawnProtection);
     }
 
     update() {
@@ -33,9 +35,9 @@ export class SecondParticle {
 
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;
-        this.opacity -= 0.002;
+        this.opacity -= 0.003;
         this.size += 0.03;
-        this.lifeTime++;
+        this.spawnProtection--;
         if (!this.isAttracted) this.velocity *= 1.006;
 
         if (
@@ -61,9 +63,9 @@ export class SecondParticle {
         ctx.stroke();
     }
 
-    repel(x: number, y: number, power: number, range: number) {
+    repel(x: number, y: number, power: number, range: number, ignoreProtection: boolean = false) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (this.lifeTime < 40 && !this.isAttracted) power *= 0.1;
+        if (!ignoreProtection && this.spawnProtection > 0 && !this.isAttracted) power *= 0.05;
 
         const forceX = (x - this.x) / 100 / Math.min(this.size / 5, 6);
         const forceY = (y - this.y) / 100 / Math.min(this.size / 5, 6);

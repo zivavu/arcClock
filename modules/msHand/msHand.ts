@@ -6,7 +6,7 @@ import {
     msLinesLimit,
     msMainOffset,
 } from '../canvas/canvas.js';
-import { msRad } from '../timeManager/timeManager.js';
+import { milliseconds, msRad } from '../timeManager/timeManager.js';
 let arcs: { x: number; y: number }[][][] = [];
 
 export let msCenter: {

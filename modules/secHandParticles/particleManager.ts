@@ -38,13 +38,23 @@ export function updateSParticles() {
     }
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
+    }
+}
+export function drawSParticles() {
+    for (let i = 0; i < particles.length; i++) {
         if (particles[i]) particles[i].draw();
     }
 }
 
-export function repelAllParticles(x: number, y: number, power: number, range: number) {
+export function repelAllParticles(
+    x: number,
+    y: number,
+    power: number,
+    range: number,
+    ignoreProtection: boolean = false
+) {
     for (let i = 0; i < particles.length; i++) {
-        particles[i].repel(x, y, power, range);
+        particles[i].repel(x, y, power, range, ignoreProtection);
     }
 }
 

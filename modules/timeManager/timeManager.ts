@@ -14,6 +14,6 @@ export let hourRad: number, minRad: number, secRad: number, msRad: number;
 function updateRadians() {
     msRad = (milliseconds * 2 * Math.PI) / 1000 - 0.5 * Math.PI;
     secRad = (seconds * 2 * Math.PI) / 60 - 0.5 * Math.PI;
-    minRad = (minutes * 2 * Math.PI) / 60 - 0.5 * Math.PI + secRad / 60;
+    minRad = (minutes * 2 * Math.PI) / 60 - 0.5 * Math.PI + (seconds * 2 * Math.PI) / 3600;
     hourRad = (hours * 2 * Math.PI) / 60 - 0.5 * Math.PI;
 }
