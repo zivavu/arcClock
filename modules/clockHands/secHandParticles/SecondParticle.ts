@@ -1,5 +1,5 @@
-import { canvas, ctx } from '../canvas/canvas.js';
-import { seconds, secRad } from '../timeManager/timeManager.js';
+import { canvas, ctx } from '../../canvas/canvas.js';
+import { seconds, secRad } from '../../timeManager/timeManager.js';
 import { particles } from './particleManager.js';
 
 export class SecondParticle {
@@ -65,7 +65,7 @@ export class SecondParticle {
 
     repel(x: number, y: number, power: number, range: number, ignoreProtection: boolean = false) {
         if (Math.abs(x - this.x) > range || Math.abs(y - this.y) > range) return;
-        if (!ignoreProtection && this.spawnProtection > 0 && !this.isAttracted) power *= 0.05;
+        if (!ignoreProtection && this.spawnProtection > 0 && !this.isAttracted) power *= 0.1;
 
         const forceX = (x - this.x) / 100 / Math.min(this.size / 5, 6);
         const forceY = (y - this.y) / 100 / Math.min(this.size / 5, 6);

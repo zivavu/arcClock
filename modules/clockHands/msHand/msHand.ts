@@ -5,8 +5,9 @@ import {
     msArcsLimit,
     msLinesLimit,
     msMainOffset,
-} from '../canvas/canvas.js';
-import { milliseconds, msRad } from '../timeManager/timeManager.js';
+} from '../../canvas/canvas.js';
+import { msRad } from '../../timeManager/timeManager.js';
+import { repelAllParticles } from '../secHandParticles/particleManager.js';
 let arcs: { x: number; y: number }[][][] = [];
 
 export let msCenter: {
@@ -34,6 +35,7 @@ export function updateMS() {
             currentBranch.push({ x: newX, y: newY });
         }
     }
+    repelAllParticles(msCenter.x, msCenter.y, 0.7, 130);
     if (arcs.length > msArcsLimit) {
         arcs.shift();
     }
@@ -46,12 +48,12 @@ export function drawMS() {
         for (let j = 0; j < currentRoot.length; j++) {
             const currentBranch = currentRoot[j];
             for (let k = 0; k < currentBranch.length - 1; k++) {
-                ctx.beginPath();
                 ctx.lineWidth = (msLinesLimit - k) / 2;
+                ctx.beginPath();
                 ctx.moveTo(currentBranch[k].x, currentBranch[k].y);
                 ctx.lineTo(currentBranch[k + 1].x, currentBranch[k + 1].y);
-                ctx.stroke();
                 ctx.closePath();
+                ctx.stroke();
             }
         }
     }

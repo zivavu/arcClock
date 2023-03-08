@@ -1,8 +1,12 @@
 import { drawClock } from '../clock/clock.js';
-import { drawMin, updateMin } from '../minHand/minHand.js';
-import { mouse, mouseHistory } from '../mouseManager/mouseManager.js';
-import { drawMS, updateMS } from '../msHand/msHand.js';
-import { createSParticles, drawSParticles, updateSParticles } from '../secHandParticles/particleManager.js';
+import { drawMin, updateMin } from '../clockHands/minHand/minHand.js';
+import { drawMS, updateMS } from '../clockHands/msHand/msHand.js';
+import {
+    createSParticles,
+    drawSParticles,
+    updateSParticles,
+} from '../clockHands/secHandParticles/particleManager.js';
+import { drawMouseHistory, mouse, mouseHistory } from '../mouseManager/mouseManager.js';
 import { prevS, seconds, updateDate } from '../timeManager/timeManager.js';
 
 export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -17,8 +21,8 @@ export const minArcsLimit = 5;
 export const minSegmentsLimit = 15;
 export const minMainOffset = 20;
 export const minDirMultiplier = 18;
-export const minLineWidthDevider = 4;
-export const minRepelPower = 0.5;
+export const minLineWidthDevider = 3;
+export const minRepelPower = 0.3;
 
 export const mouseHistoryLimit = 17;
 
@@ -57,20 +61,10 @@ function update() {
 function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawClock();
+    drawMouseHistory();
     drawMS();
     drawSParticles();
     drawMin();
-    // drawMouseHistory();
-}
-
-function drawMouseHistory() {
-    [...mouseHistory, mouse].forEach((point) => {
-        ctx.beginPath();
-        ctx.fillStyle = `yellow`;
-        ctx.fillRect(point.x, point.y, 20, 20);
-        ctx.closePath();
-        ctx.fillStyle = `black`;
-    });
 }
 
 setDimentions();

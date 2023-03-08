@@ -28,7 +28,19 @@
         "modules/clock/clock.js": true,
         "modules/minHand/minHand.js": true,
         "modules/minHand/minHand.js.map": true,
-        "modules/timeManager/timeManager.js": true
+        "modules/timeManager/timeManager.js": true,
+        "modules/hourHand/hourHand.js": true,
+        "modules/hourHand/hourHand.js.map": true,
+        "modules/clockHands/secHandParticles/particleManager.js": true,
+        "modules/clockHands/secHandParticles/SecondParticle.js.map": true,
+        "modules/clockHands/secHandParticles/SecondParticle.js": true,
+        "modules/clockHands/secHandParticles/particleManager.js.map": true,
+        "modules/clockHands/msHand/msHand.js.map": true,
+        "modules/clockHands/msHand/msHand.js": true,
+        "modules/clockHands/minHand/minHand.js": true,
+        "modules/clockHands/minHand/minHand.js.map": true,
+        "modules/clockHands/hourHand/hourHand.js": true,
+        "modules/clockHands/hourHand/hourHand.js.map": true
     },
     "hide-files.files": [
         "modules/canvas/canvas.js.map",
@@ -52,6 +64,18 @@
         "modules/clock/clock.js",
         "modules/minHand/minHand.js",
         "modules/minHand/minHand.js.map",
-        "modules/timeManager/timeManager.js"
+        "modules/timeManager/timeManager.js",
+        "modules/hourHand/hourHand.js",
+        "modules/hourHand/hourHand.js.map",
+        "modules/clockHands/secHandParticles/particleManager.js",
+        "modules/clockHands/secHandParticles/SecondParticle.js.map",
+        "modules/clockHands/secHandParticles/SecondParticle.js",
+        "modules/clockHands/secHandParticles/particleManager.js.map",
+        "modules/clockHands/msHand/msHand.js.map",
+        "modules/clockHands/msHand/msHand.js",
+        "modules/clockHands/minHand/minHand.js",
+        "modules/clockHands/minHand/minHand.js.map",
+        "modules/clockHands/hourHand/hourHand.js",
+        "modules/clockHands/hourHand/hourHand.js.map"
     ]
 }
