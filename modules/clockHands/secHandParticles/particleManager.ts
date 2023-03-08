@@ -27,14 +27,6 @@ export function createSParticles() {
 }
 
 export function updateSParticles() {
-    if (isMouseDown) {
-        [...mouseHistory, mouse].forEach((pos, i) => {
-            attractAllParticles(pos.x, pos.y, 0.6 + i * 0.3, 60 + i * (60 / mouseHistoryLimit));
-            if (i === 0) {
-                attractAllParticles(pos.x, pos.y, 0.3, 140);
-            }
-        });
-    }
     for (let i = 0; i < particles.length; i++) {
         particles[i].update();
     }

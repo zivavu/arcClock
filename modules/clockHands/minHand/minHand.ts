@@ -55,7 +55,6 @@ export function updateMin() {
 }
 
 export function drawMin() {
-    if (!arcs[0]) return;
     for (let j = 0; j < minArcsLimit; j++) {
         ctx.beginPath();
         const currentBranch = arcs[j];

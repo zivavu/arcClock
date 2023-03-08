@@ -1,4 +1,5 @@
 import { drawClock } from '../clock/clock.js';
+import { drawH, upadteH } from '../clockHands/hourHand/hourHand.js';
 import { drawMin, updateMin } from '../clockHands/minHand/minHand.js';
 import { drawMS, updateMS } from '../clockHands/msHand/msHand.js';
 import {
@@ -6,7 +7,12 @@ import {
     drawSParticles,
     updateSParticles,
 } from '../clockHands/secHandParticles/particleManager.js';
-import { drawMouseHistory, mouse, mouseHistory } from '../mouseManager/mouseManager.js';
+import {
+    drawMouseHistory,
+    mouse,
+    mouseHistory,
+    updateMouseRepelPoints,
+} from '../mouseManager/mouseManager.js';
 import { prevS, seconds, updateDate } from '../timeManager/timeManager.js';
 
 export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -40,11 +46,12 @@ function setDimentions() {
         x: canvas.width / 2,
         y: canvas.height / 2,
     };
-    updateDate();
-    draw();
 }
 
-const frameInterval = setInterval(update, framerate);
+const frameInterval = setInterval(() => {
+    update();
+    draw();
+}, framerate);
 
 function update() {
     if (document.hidden) return;
@@ -54,8 +61,9 @@ function update() {
         createSParticles();
     }
     updateSParticles();
+    updateMouseRepelPoints();
     updateMin();
-    draw();
+    // upadteH();
 }
 
 function draw() {
@@ -65,6 +73,7 @@ function draw() {
     drawMS();
     drawSParticles();
     drawMin();
+    // drawH();
 }
 
 setDimentions();

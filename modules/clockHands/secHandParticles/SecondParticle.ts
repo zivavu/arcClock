@@ -24,7 +24,6 @@ export class SecondParticle {
         const extendSpawnProtection = (seconds >= 45 && seconds <= 60) || (seconds >= 0 && seconds <= 10);
         this.spawnProtection = extendSpawnProtection ? 90 : 50;
         this.isAttracted = false;
-        console.log(this.spawnProtection);
     }
 
     update() {

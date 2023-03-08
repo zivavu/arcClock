@@ -1,5 +1,6 @@
 import { ctx, mouseHistoryLimit } from '../canvas/canvas.js';
 import {
+    attractAllParticles,
     repelAllParticles,
     resetSParticlesIsAttracted,
 } from '../clockHands/secHandParticles/particleManager.js';
@@ -61,6 +62,17 @@ export function drawMouseHistory() {
             ctx.stroke();
         }
     });
+}
+
+export function updateMouseRepelPoints() {
+    if (isMouseDown) {
+        [...mouseHistory, mouse].forEach((pos, i) => {
+            attractAllParticles(pos.x, pos.y, 0.6 + i * 0.4, 60 + i * (80 / mouseHistoryLimit));
+            if (i === 0) {
+                attractAllParticles(pos.x, pos.y, 0.3, 140);
+            }
+        });
+    }
 }
 
 //# sourceMappingURL=mouseManager.js.map
