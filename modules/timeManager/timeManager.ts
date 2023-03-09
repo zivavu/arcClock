@@ -2,7 +2,7 @@ export let hours: number, minutes: number, seconds: number, milliseconds: number
 export let prevS: number;
 export function updateDate() {
     const date = new Date();
-    hours = date.getHours();
+    hours = 6;
     minutes = date.getMinutes();
     prevS = seconds;
     seconds = date.getSeconds();

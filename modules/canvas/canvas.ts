@@ -56,24 +56,24 @@ const frameInterval = setInterval(() => {
 function update() {
     if (document.hidden) return;
     updateDate();
-    updateMS();
-    if (seconds !== prevS) {
-        createSParticles();
-    }
-    updateSParticles();
-    updateMouseRepelPoints();
-    updateMin();
-    // upadteH();
+    // updateMS();
+    // if (seconds !== prevS) {
+    //     createSParticles();
+    // }
+    // updateSParticles();
+    // updateMouseRepelPoints();
+    // updateMin();
+    upadteH();
 }
 
 function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     drawClock();
-    drawMouseHistory();
-    drawMS();
-    drawSParticles();
-    drawMin();
-    // drawH();
+    // drawMouseHistory();
+    // drawMS();
+    // drawSParticles();
+    // drawMin();
+    drawH();
 }
 
 setDimentions();
