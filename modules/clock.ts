@@ -1,4 +1,5 @@
-import { centerScreenPoint, cloackWidth, ctx } from '../canvas/canvas.js';
+import { centerScreenPoint, cloackWidth, ctx } from './canvas.js';
+import { normFloat } from './utlis.js';
 
 export function drawClock() {
     ctx.beginPath();
@@ -14,8 +15,8 @@ export function drawClock() {
             y: cloackWidth * Math.sin(rad),
         };
         const start = {
-            x: centerScreenPoint.x + offset.x,
-            y: centerScreenPoint.y + offset.y,
+            x: normFloat(centerScreenPoint.x + offset.x),
+            y: normFloat(centerScreenPoint.y + offset.y),
         };
 
         const dir = {
@@ -37,7 +38,7 @@ export function drawClock() {
         }
         ctx.beginPath();
         ctx.moveTo(start.x, start.y);
-        ctx.lineTo(start.x + dir.x * markLength, start.y + dir.y * markLength);
+        ctx.lineTo(start.x + normFloat(dir.x) * markLength, start.y + normFloat(dir.y) * markLength);
         ctx.stroke();
         ctx.closePath();
     }

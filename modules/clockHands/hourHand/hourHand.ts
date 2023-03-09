@@ -1,5 +1,6 @@
-import { centerScreenPoint, cloackWidth, ctx, forceUpdate } from './../../canvas/canvas.js';
-import { hourRad, hours, prevH, prevHRad } from './../../timeManager/timeManager.js';
+import { centerScreenPoint, cloackWidth, ctx, forceUpdate } from '../../canvas.js';
+import { hourRad, hours, prevH, prevHRad } from '../../timeManager.js';
+import { normFloat } from '../../utlis.js';
 import { particles } from './../secHandParticles/particleManager';
 
 export let hCenter: {
@@ -83,28 +84,25 @@ export function drawH() {
     for (let i = 0; i < hoursRoot.length; i++) {
         const current = hoursRoot[i];
         const { x, y, branchesArr } = current;
-        ctx.strokeStyle = 'gray';
         ctx.lineWidth = Math.round(i / 3);
-        ctx.fillStyle = 'gray';
+        ctx.fillStyle = 'white';
         ctx.beginPath();
-        ctx.arc(x, y, i, 0, Math.PI * 2);
+        ctx.arc(normFloat(x), normFloat(y), i, 0, Math.PI * 2);
+        ctx.stroke();
         ctx.fill();
         ctx.closePath();
-        ctx.stroke();
         ctx.moveTo(x, y);
         ctx.fillStyle = 'black';
 
         if (branchesArr[0][0]) {
-            ctx.lineWidth = parseFloat((0.2 + i / 10).toFixed(2));
+            ctx.lineWidth = normFloat(0.2 + i / 10);
+            ctx.strokeStyle = `white`;
             for (let j = 0; j < 2; j++) {
                 for (let k = 0; k < branchesArr[0].length; k++) {
                     const { x, y } = branchesArr[j][k];
-                    const circleWidth = Math.max(
-                        Math.round(parseFloat((2 + i / 3 - k / 12).toFixed(2))),
-                        0.3
-                    );
+                    const circleWidth = Math.max(normFloat(2 + i / 3 - k / 10), 0.3);
                     ctx.beginPath();
-                    ctx.arc(x, y, circleWidth, 0, Math.PI * 2);
+                    ctx.arc(normFloat(x), normFloat(y), normFloat(circleWidth), 0, Math.PI * 2);
                     ctx.stroke();
                     ctx.closePath();
                 }

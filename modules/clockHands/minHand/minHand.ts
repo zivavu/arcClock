@@ -8,8 +8,9 @@ import {
     minMainOffset,
     minRepelPower,
     minSegmentsLimit,
-} from '../../canvas/canvas.js';
-import { minRad } from '../../timeManager/timeManager.js';
+} from '../../canvas.js';
+import { minRad } from '../../timeManager.js';
+import { normFloat } from '../../utlis.js';
 import { repelAllParticles } from '../secHandParticles/particleManager.js';
 export let minCenter: {
     x: number;
@@ -59,9 +60,9 @@ export function drawMin() {
         ctx.beginPath();
         const currentBranch = arcs[j];
         for (let k = 0; k < currentBranch.length - 1; k++) {
-            ctx.lineWidth = (minSegmentsLimit - k) / minLineWidthDevider;
-            ctx.moveTo(currentBranch[k].x, currentBranch[k].y);
-            ctx.lineTo(currentBranch[k + 1].x, currentBranch[k + 1].y);
+            const { x, y } = currentBranch[k];
+            ctx.lineWidth = normFloat((minSegmentsLimit - k) / minLineWidthDevider);
+            ctx.lineTo(normFloat(x), normFloat(y));
             ctx.stroke();
         }
         const { x: lastSegmentX, y: lastSegmentY } = currentBranch[currentBranch.length - 1];

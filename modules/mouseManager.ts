@@ -1,9 +1,10 @@
-import { ctx, mouseHistoryLimit } from '../canvas/canvas.js';
+import { ctx, mouseHistoryLimit } from './canvas.js';
 import {
     attractAllParticles,
     repelAllParticles,
     resetSParticlesIsAttracted,
-} from '../clockHands/secHandParticles/particleManager.js';
+} from './clockHands/secHandParticles/particleManager.js';
+import { normFloat } from './utlis.js';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
@@ -56,7 +57,13 @@ export function drawMouseHistory() {
             const shade = 80 + i * 10;
             ctx.strokeStyle = `rgba(${shade}, ${shade}, ${shade}, ${opacity})`;
             ctx.beginPath();
-            ctx.arc(point.x, point.y, Math.max(rippleWidth - i * 2, 1), 0, Math.PI * 2);
+            ctx.arc(
+                normFloat(point.x, 0),
+                normFloat(point.y, 0),
+                Math.max(rippleWidth - i * 2, 1),
+                0,
+                Math.PI * 2
+            );
             ctx.closePath();
             ctx.lineWidth = Math.max(5 - i, 1);
             ctx.stroke();

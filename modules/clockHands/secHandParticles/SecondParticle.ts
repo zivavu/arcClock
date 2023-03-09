@@ -1,5 +1,6 @@
-import { canvas, ctx } from '../../canvas/canvas.js';
-import { seconds, secRad } from '../../timeManager/timeManager.js';
+import { canvas, ctx } from '../../canvas.js';
+import { seconds, secRad } from '../../timeManager.js';
+import { normFloat } from '../../utlis.js';
 import { particles } from './particleManager.js';
 
 export class SecondParticle {
@@ -53,11 +54,11 @@ export class SecondParticle {
     }
 
     draw() {
+        ctx.lineWidth = 2;
         ctx.strokeStyle = `rgba(255, 255, 255, ${this.opacity}`;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.arc(normFloat(this.x), normFloat(this.y), normFloat(this.size), 0, Math.PI * 2);
         ctx.closePath();
-        ctx.lineWidth = 3;
         ctx.fill();
         ctx.stroke();
     }

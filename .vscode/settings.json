@@ -40,7 +40,17 @@
         "modules/clockHands/minHand/minHand.js": true,
         "modules/clockHands/minHand/minHand.js.map": true,
         "modules/clockHands/hourHand/hourHand.js": true,
-        "modules/clockHands/hourHand/hourHand.js.map": true
+        "modules/clockHands/hourHand/hourHand.js.map": true,
+        "modules/mouseManager.js.map": true,
+        "modules/mouseManager.js": true,
+        "modules/timeManager.js": true,
+        "modules/timeManager.js.map": true,
+        "modules/canvas.js": true,
+        "modules/clock.js.map": true,
+        "modules/clock.js": true,
+        "modules/canvas.js.map": true,
+        "modules/utlis.js.map": true,
+        "modules/utlis.js": true
     },
     "hide-files.files": [
         "modules/canvas/canvas.js.map",
@@ -76,6 +86,16 @@
         "modules/clockHands/minHand/minHand.js",
         "modules/clockHands/minHand/minHand.js.map",
         "modules/clockHands/hourHand/hourHand.js",
-        "modules/clockHands/hourHand/hourHand.js.map"
+        "modules/clockHands/hourHand/hourHand.js.map",
+        "modules/mouseManager.js.map",
+        "modules/mouseManager.js",
+        "modules/timeManager.js",
+        "modules/timeManager.js.map",
+        "modules/canvas.js",
+        "modules/clock.js.map",
+        "modules/clock.js",
+        "modules/canvas.js.map",
+        "modules/utlis.js.map",
+        "modules/utlis.js"
     ]
 }

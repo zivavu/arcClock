@@ -5,8 +5,9 @@ import {
     msArcsLimit,
     msLinesLimit,
     msMainOffset,
-} from '../../canvas/canvas.js';
-import { msRad } from '../../timeManager/timeManager.js';
+} from '../../canvas.js';
+import { msRad } from '../../timeManager.js';
+import { normFloat } from '../../utlis.js';
 import { repelAllParticles } from '../secHandParticles/particleManager.js';
 let arcs: { x: number; y: number }[][][] = [];
 
@@ -30,8 +31,8 @@ export function updateMS() {
         const currentBranch = currentRoot[i];
         for (let j = 0; j < msLinesLimit; j++) {
             const { x: prevX, y: prevY } = currentBranch[j];
-            const newX = prevX + (Math.random() * msMainOffset - msMainOffset / 2);
-            const newY = prevY + (Math.random() * msMainOffset - msMainOffset / 2);
+            const newX = prevX + normFloat(Math.random() * msMainOffset - msMainOffset / 2);
+            const newY = prevY + normFloat(Math.random() * msMainOffset - msMainOffset / 2);
             currentBranch.push({ x: newX, y: newY });
         }
     }
@@ -43,15 +44,15 @@ export function updateMS() {
 export function drawMS() {
     for (let i = 0; i < arcs.length; i++) {
         const currentRoot = arcs[i];
-        const opacity = ((i / msArcsLimit) * 0.4).toFixed(2);
+        const opacity = ((i / msArcsLimit) * 0.4).toFixed(1);
         ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
         for (let j = 0; j < currentRoot.length; j++) {
             const currentBranch = currentRoot[j];
             for (let k = 0; k < currentBranch.length - 1; k++) {
-                ctx.lineWidth = (msLinesLimit - k) / 2;
+                ctx.lineWidth = normFloat(msLinesLimit - k);
                 ctx.beginPath();
-                ctx.moveTo(currentBranch[k].x, currentBranch[k].y);
-                ctx.lineTo(currentBranch[k + 1].x, currentBranch[k + 1].y);
+                ctx.moveTo(normFloat(currentBranch[k].x), normFloat(currentBranch[k].y));
+                ctx.lineTo(normFloat(currentBranch[k + 1].x), normFloat(currentBranch[k + 1].y));
                 ctx.closePath();
                 ctx.stroke();
             }

@@ -1,6 +1,6 @@
-import { centerScreenPoint, cloackWidth, mouseHistoryLimit } from '../../canvas/canvas.js';
-import { isMouseDown, mouse, mouseHistory } from '../../mouseManager/mouseManager.js';
-import { secRad } from '../../timeManager/timeManager.js';
+import { centerScreenPoint, cloackWidth, mouseHistoryLimit } from '../../canvas.js';
+import { isMouseDown, mouse, mouseHistory } from '../../mouseManager.js';
+import { secRad } from '../../timeManager.js';
 import { msCenter } from '../msHand/msHand.js';
 import { SecondParticle } from './SecondParticle.js';
 

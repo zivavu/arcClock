@@ -1,27 +1,22 @@
-import { drawClock } from '../clock/clock.js';
-import { drawH, upadteH } from '../clockHands/hourHand/hourHand.js';
-import { drawMin, updateMin } from '../clockHands/minHand/minHand.js';
-import { drawMS, updateMS } from '../clockHands/msHand/msHand.js';
+import { drawClock } from './clock.js';
+import { drawH, upadteH } from './clockHands/hourHand/hourHand.js';
+import { drawMin, updateMin } from './clockHands/minHand/minHand.js';
+import { drawMS, updateMS } from './clockHands/msHand/msHand.js';
 import {
     createSParticles,
     drawSParticles,
     updateSParticles,
-} from '../clockHands/secHandParticles/particleManager.js';
-import {
-    drawMouseHistory,
-    mouse,
-    mouseHistory,
-    updateMouseRepelPoints,
-} from '../mouseManager/mouseManager.js';
-import { prevS, seconds, updateDate } from '../timeManager/timeManager.js';
+} from './clockHands/secHandParticles/particleManager.js';
+import { drawMouseHistory, mouse, mouseHistory, updateMouseRepelPoints } from './mouseManager.js';
+import { prevS, seconds, updateDate } from './timeManager.js';
 
 export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 //Config variables
-export const msArcsLimit = 30;
-export const msLinesLimit = 10;
-export const msMainOffset = 30;
+export const msArcsLimit = 18;
+export const msLinesLimit = 6;
+export const msMainOffset = 35;
 
 export const minArcsLimit = 5;
 export const minSegmentsLimit = 15;
@@ -77,8 +72,8 @@ function draw() {
     drawClock();
     drawMouseHistory();
     drawMS();
-    drawSParticles();
     drawMin();
+    drawSParticles();
 }
 
 setDimentions();
