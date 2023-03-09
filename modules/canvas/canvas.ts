@@ -35,10 +35,13 @@ export const mouseHistoryLimit = 17;
 export let cloackWidth: number;
 export let centerScreenPoint: { x: number; y: number };
 
+export let forceUpdate = false;
+
 const framerate = 1000 / 60;
 
 window.addEventListener('resize', setDimentions);
 function setDimentions() {
+    forceUpdate = true;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     cloackWidth = Math.min(canvas.height / 2.3, canvas.width / 2.3);
@@ -46,6 +49,8 @@ function setDimentions() {
         x: canvas.width / 2,
         y: canvas.height / 2,
     };
+    update();
+    forceUpdate = false;
 }
 
 const frameInterval = setInterval(() => {
@@ -56,24 +61,24 @@ const frameInterval = setInterval(() => {
 function update() {
     if (document.hidden) return;
     updateDate();
-    // updateMS();
-    // if (seconds !== prevS) {
-    //     createSParticles();
-    // }
-    // updateSParticles();
-    // updateMouseRepelPoints();
-    // updateMin();
+    updateMS();
+    if (seconds !== prevS) {
+        createSParticles();
+    }
+    updateSParticles();
+    updateMouseRepelPoints();
+    updateMin();
     upadteH();
 }
 
 function draw() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawClock();
-    // drawMouseHistory();
-    // drawMS();
-    // drawSParticles();
-    // drawMin();
     drawH();
+    drawClock();
+    drawMouseHistory();
+    drawMS();
+    drawSParticles();
+    drawMin();
 }
 
 setDimentions();

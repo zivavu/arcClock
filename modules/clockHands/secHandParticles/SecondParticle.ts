@@ -28,9 +28,9 @@ export class SecondParticle {
 
     update() {
         if (this.dirX > 1) this.dirX = 1;
+        if (this.dirX < -1) this.dirX = -1;
         if (this.dirY > 1) this.dirY = 1;
         if (this.dirY < -1) this.dirY = -1;
-        if (this.dirX < -1) this.dirX = -1;
 
         this.x += this.dirX * this.velocity;
         this.y += this.dirY * this.velocity;

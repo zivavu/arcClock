@@ -1,5 +1,6 @@
-import { centerScreenPoint, cloackWidth, ctx } from './../../canvas/canvas.js';
-import { hourRad } from './../../timeManager/timeManager.js';
+import { centerScreenPoint, cloackWidth, ctx, forceUpdate } from './../../canvas/canvas.js';
+import { hourRad, hours, prevH, prevHRad } from './../../timeManager/timeManager.js';
+import { particles } from './../secHandParticles/particleManager';
 
 export let hCenter: {
     x: number;
@@ -14,6 +15,10 @@ let hoursRoot: {
 }[] = [];
 
 export function upadteH() {
+    if (prevHRad === hourRad && !forceUpdate) {
+        return;
+    }
+
     hoursRoot = [];
     const offset = {
         x: cloackWidth * Math.cos(hourRad),
@@ -29,11 +34,36 @@ export function upadteH() {
     };
     hoursRoot.push({ ...hCenter, branchesArr: [[{ ...hCenter }], [{ ...hCenter }]], branchesTarget: [] });
 
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 20; i++) {
         const prevRoot = hoursRoot[i];
-        const newX = prevRoot.x + dir.x * i * 2.8;
-        const newY = prevRoot.y + dir.y * i * 2.8;
+        const newX = prevRoot.x + dir.x * i * 3.1;
+        const newY = prevRoot.y + dir.y * i * 3.1;
 
+        hoursRoot.push({
+            x: newX,
+            y: newY,
+            branchesArr: [[]],
+            branchesTarget: [],
+        });
+
+        const { branchesArr } = prevRoot;
+        const branchLength = 90;
+
+        if ((i >= 11 && i % 4 === 1) || i === 8) {
+            let prevX = prevRoot.x,
+                prevY = prevRoot.y;
+            const direction = hourRad + 20 * (Math.PI / 180);
+
+            for (let k = 0; k < branchLength; k++) {
+                const angle = direction + k / 5;
+                const offset = Math.max(5 + (i * 6 + (branchLength - k * 2.8)) / 14, 5 - k * 0.045);
+                const newX = prevX + Math.cos(angle) * offset;
+                const newY = prevY + Math.sin(angle) * offset;
+                branchesArr[0].push({ x: newX, y: newY });
+                prevX = newX;
+                prevY = newY;
+            }
+        }
         //Limits the number of segments to not exceed the center of the screeen
         if (
             (dir.x > 0 && newX > centerScreenPoint.x) ||
@@ -43,35 +73,6 @@ export function upadteH() {
         ) {
             break;
         }
-
-        hoursRoot.push({
-            x: newX,
-            y: newY,
-            branchesArr: [[], []],
-            branchesTarget: [],
-        });
-
-        const branchRad = hourRad + 35 * (Math.PI / 180);
-        const { branchesArr } = prevRoot;
-        const branchLength = 70;
-
-        if (i >= 6 && i % 4 === 0) {
-            for (let j = 0; j < 2; j++) {
-                let prevX = prevRoot.x,
-                    prevY = prevRoot.y;
-                let direction = j % 2 === 1 ? branchRad : branchRad + 180 * (Math.PI / 180);
-
-                for (let k = 0; k < branchLength; k++) {
-                    const angle = direction + (k / 5) * 1;
-                    const offset = 3 + ((branchLength - k) * 0.8 * i) / 40;
-                    const newX = prevX + Math.cos(angle) * offset;
-                    const newY = prevY + Math.sin(angle) * offset;
-                    branchesArr[j].push({ x: newX, y: newY });
-                    prevX = newX;
-                    prevY = newY;
-                }
-            }
-        }
     }
 }
 
@@ -80,9 +81,9 @@ export function drawH() {
     for (let i = 0; i < hoursRoot.length; i++) {
         const current = hoursRoot[i];
         const { x, y, branchesArr } = current;
-        ctx.strokeStyle = 'white';
-        ctx.lineWidth = i / 3;
-        ctx.fillStyle = 'white';
+        ctx.strokeStyle = 'gray';
+        ctx.lineWidth = Math.round(i / 3);
+        ctx.fillStyle = 'gray';
         ctx.beginPath();
         ctx.arc(x, y, i, 0, Math.PI * 2);
         ctx.fill();
@@ -91,18 +92,35 @@ export function drawH() {
         ctx.moveTo(x, y);
         ctx.fillStyle = 'black';
 
-        if (branchesArr[0]) {
+        if (branchesArr[0][0]) {
+            const newArr = JSON.parse(JSON.stringify(branchesArr[0]));
+            branchesArr.push(mirrorParticles(newArr, current.x, current.y));
+            ctx.lineWidth = parseFloat((0.2 + i / 10).toFixed(2));
             for (let j = 0; j < 2; j++) {
                 for (let k = 0; k < branchesArr[0].length; k++) {
                     const { x, y } = branchesArr[j][k];
-                    ctx.lineWidth = i / 8;
+                    const circleWidth = Math.max(
+                        Math.round(parseFloat((2 + i / 3 - k / 12).toFixed(2))),
+                        0.3
+                    );
                     ctx.beginPath();
-                    const circleWidth = Math.max(i / 3 - k / 7, 3);
                     ctx.arc(x, y, circleWidth, 0, Math.PI * 2);
-                    ctx.closePath();
                     ctx.stroke();
+                    ctx.closePath();
                 }
             }
         }
     }
+}
+
+function mirrorParticles(particles: { x: number; y: number }[], x0: number, y0: number) {
+    for (let particle of particles) {
+        let dx = particle.x - x0;
+        let dy = particle.y - y0;
+        let dist = Math.sqrt(dx * dx + dy * dy);
+        let angle = Math.atan2(dy, dx);
+        particle.x = x0 + dist * Math.cos(-angle + hourRad * 2);
+        particle.y = y0 + dist * Math.sin(-angle + hourRad * 2);
+    }
+    return particles;
 }
