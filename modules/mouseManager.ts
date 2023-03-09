@@ -6,7 +6,7 @@ import {
 } from './clockHands/secHandParticles/particleManager.js';
 import { normFloat } from './utlis.js';
 
-const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+const canvas = document.getElementById('main-canvas') as HTMLCanvasElement;
 
 export let isMouseDown = false;
 export let mouse = {
@@ -58,8 +58,8 @@ export function drawMouseHistory() {
             ctx.strokeStyle = `rgba(${shade}, ${shade}, ${shade}, ${opacity})`;
             ctx.beginPath();
             ctx.arc(
-                normFloat(point.x, 0),
-                normFloat(point.y, 0),
+                Math.round(point.x),
+                Math.round(point.y),
                 Math.max(rippleWidth - i * 2, 1),
                 0,
                 Math.PI * 2

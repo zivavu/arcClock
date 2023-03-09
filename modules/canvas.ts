@@ -1,5 +1,5 @@
 import { drawClock } from './clock.js';
-import { drawH, upadteH } from './clockHands/hourHand/hourHand.js';
+import { drawH, hourCanvas, hourCtx, upadteH } from './clockHands/hourHand/hourHand.js';
 import { drawMin, updateMin } from './clockHands/minHand/minHand.js';
 import { drawMS, updateMS } from './clockHands/msHand/msHand.js';
 import {
@@ -10,7 +10,7 @@ import {
 import { drawMouseHistory, mouse, mouseHistory, updateMouseRepelPoints } from './mouseManager.js';
 import { prevS, seconds, updateDate } from './timeManager.js';
 
-export const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+export const canvas = document.getElementById('main-canvas') as HTMLCanvasElement;
 export const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
 //Config variables
@@ -39,12 +39,15 @@ function setDimentions() {
     forceUpdate = true;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    hourCanvas.width = window.innerWidth;
+    hourCanvas.height = window.innerHeight;
     cloackWidth = Math.min(canvas.height / 2.3, canvas.width / 2.3);
     centerScreenPoint = {
         x: canvas.width / 2,
         y: canvas.height / 2,
     };
     update();
+    draw();
     forceUpdate = false;
 }
 
@@ -67,7 +70,7 @@ function update() {
 }
 
 function draw() {
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawH();
     drawClock();
     drawMouseHistory();

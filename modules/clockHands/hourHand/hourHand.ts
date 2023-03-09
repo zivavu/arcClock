@@ -1,7 +1,9 @@
-import { centerScreenPoint, cloackWidth, ctx, forceUpdate } from '../../canvas.js';
+import { centerScreenPoint, cloackWidth, forceUpdate } from '../../canvas.js';
 import { hourRad, hours, prevH, prevHRad } from '../../timeManager.js';
 import { normFloat } from '../../utlis.js';
-import { particles } from './../secHandParticles/particleManager';
+
+export const hourCanvas = document.getElementById('hour-canvas') as HTMLCanvasElement;
+export const hourCtx = hourCanvas.getContext('2d') as CanvasRenderingContext2D;
 
 export let hCenter: {
     x: number;
@@ -80,31 +82,40 @@ export function upadteH() {
 }
 
 export function drawH() {
-    ctx.moveTo(hCenter.x, hCenter.y);
+    if (prevHRad === hourRad && !forceUpdate) {
+        return;
+    }
+    hourCtx.clearRect(0, 0, hourCanvas.width, hourCanvas.height);
+    hourCtx.moveTo(hCenter.x, hCenter.y);
     for (let i = 0; i < hoursRoot.length; i++) {
+        const branchColor = `
+        rgb(${Math.max(0, 160 - i * 8.5)},
+        ${Math.max(0, 110 - i * 7)},
+        ${Math.max(0, 200 - i * 8)})`;
         const current = hoursRoot[i];
         const { x, y, branchesArr } = current;
-        ctx.lineWidth = Math.round(i / 3);
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(normFloat(x), normFloat(y), i, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fill();
-        ctx.closePath();
-        ctx.moveTo(x, y);
-        ctx.fillStyle = 'black';
+        hourCtx.lineWidth = Math.round(i / 3);
+        hourCtx.fillStyle = branchColor;
+        hourCtx.strokeStyle = branchColor;
+        hourCtx.beginPath();
+        hourCtx.arc(normFloat(x), normFloat(y), i, 0, Math.PI * 2);
+        hourCtx.stroke();
+        hourCtx.fill();
+        hourCtx.closePath();
+        hourCtx.moveTo(normFloat(x), normFloat(y));
+        hourCtx.fillStyle = 'black';
 
         if (branchesArr[0][0]) {
-            ctx.lineWidth = normFloat(0.2 + i / 10);
-            ctx.strokeStyle = `white`;
+            hourCtx.lineWidth = normFloat(0.2 + i / 10);
+            hourCtx.strokeStyle = branchColor;
             for (let j = 0; j < 2; j++) {
                 for (let k = 0; k < branchesArr[0].length; k++) {
                     const { x, y } = branchesArr[j][k];
                     const circleWidth = Math.max(normFloat(2 + i / 3 - k / 10), 0.3);
-                    ctx.beginPath();
-                    ctx.arc(normFloat(x), normFloat(y), normFloat(circleWidth), 0, Math.PI * 2);
-                    ctx.stroke();
-                    ctx.closePath();
+                    hourCtx.beginPath();
+                    hourCtx.arc(normFloat(x), normFloat(y), normFloat(circleWidth), 0, Math.PI * 2);
+                    hourCtx.stroke();
+                    hourCtx.closePath();
                 }
             }
         }
