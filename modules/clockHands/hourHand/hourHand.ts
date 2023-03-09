@@ -9,7 +9,7 @@ export let hCenter: {
 let hoursRoot: {
     x: number;
     y: number;
-    branchesArr: { x: number; y: number }[];
+    branchesArr: { x: number; y: number }[][];
     branchesTarget: { x: number; y: number }[];
 }[] = [];
 
@@ -27,7 +27,7 @@ export function upadteH() {
         x: -Math.cos(hourRad),
         y: -Math.sin(hourRad),
     };
-    hoursRoot.push({ ...hCenter, branchesArr: [{ ...hCenter }], branchesTarget: [] });
+    hoursRoot.push({ ...hCenter, branchesArr: [[{ ...hCenter }], [{ ...hCenter }]], branchesTarget: [] });
 
     for (let i = 0; i < 50; i++) {
         const prevRoot = hoursRoot[i];
@@ -47,24 +47,29 @@ export function upadteH() {
         hoursRoot.push({
             x: newX,
             y: newY,
-            branchesArr: [],
+            branchesArr: [[], []],
             branchesTarget: [],
         });
+
         const branchRad = hourRad + 35 * (Math.PI / 180);
-        let direction = i % 2 === 1 ? branchRad : branchRad + 180 * (Math.PI / 180);
-        const branchLength = 75;
         const { branchesArr } = prevRoot;
-        let prevX = prevRoot.x,
-            prevY = prevRoot.y;
-        if (i >= 6 && (i % 4 === 0 || i % 4 === 3)) {
-            for (let j = 0; j < branchLength; j++) {
-                const angle = direction + (j / 5) * 1;
-                const offset = ((branchLength - j) * 0.6 * i) / 30;
-                const newX = prevX + Math.cos(angle) * offset;
-                const newY = prevY + Math.sin(angle) * offset;
-                branchesArr.push({ x: newX, y: newY });
-                prevX = newX;
-                prevY = newY;
+        const branchLength = 70;
+
+        if (i >= 6 && i % 4 === 0) {
+            for (let j = 0; j < 2; j++) {
+                let prevX = prevRoot.x,
+                    prevY = prevRoot.y;
+                let direction = j % 2 === 1 ? branchRad : branchRad + 180 * (Math.PI / 180);
+
+                for (let k = 0; k < branchLength; k++) {
+                    const angle = direction + (k / 5) * 1;
+                    const offset = 3 + ((branchLength - k) * 0.8 * i) / 40;
+                    const newX = prevX + Math.cos(angle) * offset;
+                    const newY = prevY + Math.sin(angle) * offset;
+                    branchesArr[j].push({ x: newX, y: newY });
+                    prevX = newX;
+                    prevY = newY;
+                }
             }
         }
     }
@@ -87,14 +92,16 @@ export function drawH() {
         ctx.fillStyle = 'black';
 
         if (branchesArr[0]) {
-            for (let j = 0; j < branchesArr.length; j++) {
-                const { x, y } = branchesArr[j];
-                ctx.lineWidth = i / 8;
-                ctx.beginPath();
-                const circleWidth = Math.max(i / 2 - j / 12, 0.2);
-                ctx.arc(x, y, circleWidth, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.stroke();
+            for (let j = 0; j < 2; j++) {
+                for (let k = 0; k < branchesArr[0].length; k++) {
+                    const { x, y } = branchesArr[j][k];
+                    ctx.lineWidth = i / 8;
+                    ctx.beginPath();
+                    const circleWidth = Math.max(i / 3 - k / 7, 3);
+                    ctx.arc(x, y, circleWidth, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
             }
         }
     }
