@@ -63,6 +63,8 @@ export function upadteH() {
                 prevX = newX;
                 prevY = newY;
             }
+            const newArr = JSON.parse(JSON.stringify(branchesArr[0]));
+            branchesArr.push(mirrorParticles(newArr, newX, newY));
         }
         //Limits the number of segments to not exceed the center of the screeen
         if (
@@ -93,8 +95,6 @@ export function drawH() {
         ctx.fillStyle = 'black';
 
         if (branchesArr[0][0]) {
-            const newArr = JSON.parse(JSON.stringify(branchesArr[0]));
-            branchesArr.push(mirrorParticles(newArr, current.x, current.y));
             ctx.lineWidth = parseFloat((0.2 + i / 10).toFixed(2));
             for (let j = 0; j < 2; j++) {
                 for (let k = 0; k < branchesArr[0].length; k++) {
