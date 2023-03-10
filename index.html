@@ -7,6 +7,21 @@
         <title>Document</title>
         <script src="modules/canvas.js" type="module" defer></script>
         <link rel="stylesheet" href="styles.css" />
+        <script type="module">
+            import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js';
+
+            const firebaseConfig = {
+                apiKey: 'AIzaSyAD1IICFr08d8p1vNWdNr1kubXpE0aufhw',
+                authDomain: 'arcclock-8889c.firebaseapp.com',
+                projectId: 'arcclock-8889c',
+                storageBucket: 'arcclock-8889c.appspot.com',
+                messagingSenderId: '936458407215',
+                appId: '1:936458407215:web:0e6ba39182ea9bca3025da',
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+        </script>
     </head>
     <body>
         <canvas id="background-canvas"></canvas>
