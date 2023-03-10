@@ -1,7 +1,5 @@
 import { centerScreenPoint, cloackWidth, mouseHistoryLimit } from '../../canvas.js';
-import { isMouseDown, mouse, mouseHistory } from '../../mouseManager.js';
 import { secRad } from '../../timeManager.js';
-import { msCenter } from '../msHand/msHand.js';
 import { SecondParticle } from './SecondParticle.js';
 
 export const particles: SecondParticle[] = [];

@@ -71,7 +71,7 @@ export function drawMouseHistory() {
     });
 }
 
-export function updateMouseRepelPoints() {
+export function updateMouseAttachPoints() {
     if (isMouseDown) {
         [...mouseHistory, mouse].forEach((pos, i) => {
             attractAllParticles(pos.x, pos.y, 0.6 + i * 0.4, 60 + i * (80 / mouseHistoryLimit));

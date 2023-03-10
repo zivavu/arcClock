@@ -1,5 +1,5 @@
 import { drawClock } from './clock.js';
-import { drawH, hourCanvas, hourCtx, upadteH } from './clockHands/hourHand/hourHand.js';
+import { drawH, hourCanvas, upadteH } from './clockHands/hourHand/hourHand.js';
 import { drawMin, updateMin } from './clockHands/minHand/minHand.js';
 import { drawMS, updateMS } from './clockHands/msHand/msHand.js';
 import {
@@ -7,7 +7,7 @@ import {
     drawSParticles,
     updateSParticles,
 } from './clockHands/secHandParticles/particleManager.js';
-import { drawMouseHistory, mouse, mouseHistory, updateMouseRepelPoints } from './mouseManager.js';
+import { drawMouseHistory, updateMouseAttachPoints } from './mouseManager.js';
 import { prevS, seconds, updateDate } from './timeManager.js';
 
 export const canvas = document.getElementById('main-canvas') as HTMLCanvasElement;
@@ -64,7 +64,7 @@ function update() {
         createSParticles();
     }
     updateSParticles();
-    updateMouseRepelPoints();
+    updateMouseAttachPoints();
     updateMin();
     upadteH();
 }
