@@ -1,6 +1,6 @@
 import { centerScreenPoint, cloackWidth, forceUpdate } from '../../canvas.js';
 import { hourRad, prevHRad } from '../../timeManager.js';
-import { normFloat } from '../../utlis.js';
+import { normFloat } from '../../utils.js';
 
 export const hourCanvas = document.getElementById('hour-canvas') as HTMLCanvasElement;
 export const hourCtx = hourCanvas.getContext('2d') as CanvasRenderingContext2D;

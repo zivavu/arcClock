@@ -7,7 +7,7 @@ import {
     msMainOffset,
 } from '../../canvas.js';
 import { msRad } from '../../timeManager.js';
-import { normFloat } from '../../utlis.js';
+import { normFloat } from '../../utils.js';
 import { repelAllParticles } from '../secHandParticles/particleManager.js';
 let arcs: { x: number; y: number }[][][] = [];
 

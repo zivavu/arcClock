@@ -1,5 +1,5 @@
 import { centerScreenPoint, cloackWidth, ctx } from './canvas.js';
-import { normFloat } from './utlis.js';
+import { normFloat } from './utils.js';
 
 export function drawClock() {
     ctx.beginPath();

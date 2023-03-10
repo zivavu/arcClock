@@ -4,7 +4,7 @@ import {
     repelAllParticles,
     resetSParticlesIsAttracted,
 } from './clockHands/secHandParticles/particleManager.js';
-import { normFloat } from './utlis.js';
+import { normFloat } from './utils.js';
 
 const canvas = document.getElementById('main-canvas') as HTMLCanvasElement;
 

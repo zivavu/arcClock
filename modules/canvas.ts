@@ -52,8 +52,10 @@ function setDimentions() {
 }
 
 const frameInterval = setInterval(() => {
+    console.time('frame');
     update();
     draw();
+    console.timeEnd('frame');
 }, framerate);
 
 function update() {

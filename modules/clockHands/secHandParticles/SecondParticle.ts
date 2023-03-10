@@ -1,6 +1,6 @@
 import { canvas, ctx } from '../../canvas.js';
 import { seconds, secRad } from '../../timeManager.js';
-import { normFloat } from '../../utlis.js';
+import { normFloat } from '../../utils.js';
 import { particles } from './particleManager.js';
 
 export class SecondParticle {

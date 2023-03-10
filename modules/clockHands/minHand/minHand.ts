@@ -10,7 +10,7 @@ import {
     minSegmentsLimit,
 } from '../../canvas.js';
 import { minRad } from '../../timeManager.js';
-import { normFloat } from '../../utlis.js';
+import { normFloat } from '../../utils.js';
 import { repelAllParticles } from '../secHandParticles/particleManager.js';
 export let minCenter: {
     x: number;
