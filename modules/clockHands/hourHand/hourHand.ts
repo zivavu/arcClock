@@ -89,9 +89,9 @@ export function drawH() {
     hourCtx.moveTo(hCenter.x, hCenter.y);
     for (let i = 0; i < hoursRoot.length; i++) {
         const branchColor = `
-        rgb(${Math.max(0, 160 - i * 8.5)},
-        ${Math.max(0, 110 - i * 7)},
-        ${Math.max(0, 200 - i * 8)})`;
+        rgb(${Math.max(0, 200 - i * 7.5)},
+        ${Math.max(0, 130 - i * 6)},
+        ${Math.max(0, 240 - i * 7)})`;
         const current = hoursRoot[i];
         const { x, y, branchesArr } = current;
         hourCtx.lineWidth = Math.round(i / 3);
