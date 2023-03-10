@@ -73,10 +73,10 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawH();
     drawClock();
-    // drawMouseHistory();
-    // drawMS();
-    // drawMin();
-    // drawSParticles();
+    drawMouseHistory();
+    drawMS();
+    drawMin();
+    drawSParticles();
 }
 
 setDimentions();
