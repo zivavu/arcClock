@@ -4,7 +4,6 @@ import {
     repelAllParticles,
     resetSParticlesIsAttracted,
 } from './clockHands/secHandParticles/particleManager.js';
-import { normFloat } from './utils.js';
 
 const canvas = document.getElementById('main-canvas') as HTMLCanvasElement;
 
@@ -29,7 +28,12 @@ canvas.onmousemove = (e) => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
 };
-
+canvas.onmouseleave = () => {
+    isMouseDown = false;
+};
+canvas.onmouseenter = () => {
+    isMouseDown = true;
+};
 export let mouseHistory: { x: number; y: number }[] = [];
 let mouseHistoryInterval: ReturnType<typeof setInterval>;
 export function pushNewMousePoint() {

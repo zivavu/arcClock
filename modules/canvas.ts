@@ -32,8 +32,6 @@ export let centerScreenPoint: { x: number; y: number };
 
 export let forceUpdate = false;
 
-const framerate = 1000 / 60;
-
 window.addEventListener('resize', setDimentions);
 function setDimentions() {
     forceUpdate = true;
@@ -50,11 +48,6 @@ function setDimentions() {
     draw();
     forceUpdate = false;
 }
-
-const frameInterval = setInterval(() => {
-    update();
-    draw();
-}, framerate);
 
 function update() {
     if (document.hidden) return;
@@ -80,3 +73,10 @@ function draw() {
 }
 
 setDimentions();
+
+function animate() {
+    update();
+    draw();
+    requestAnimationFrame(animate);
+}
+animate();

@@ -39,8 +39,8 @@ export function upadteH() {
 
     for (let i = 0; i < 20; i++) {
         const prevRoot = hoursRoot[i];
-        const newX = prevRoot.x + dir.x * i * 3.1;
-        const newY = prevRoot.y + dir.y * i * 3.1;
+        const newX = prevRoot.x + dir.x * i * 3;
+        const newY = prevRoot.y + dir.y * i * 3;
 
         hoursRoot.push({
             x: newX,
